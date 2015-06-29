@@ -11,7 +11,7 @@ var mailer    = require('./lib/mailer');
 var emailSuccess=true;
 
 function dataImport(file,cfg,callback) {
-  console.log('Request dataImport for file: %s ...',file);
+  console.info('Request dataImport for file: %s ...',file);
   analytics.dataImport(file,cfg, function(err,result) {
     callback(err,result);
   });
@@ -20,7 +20,7 @@ function dataImport(file,cfg,callback) {
 function mail(file,uploadedData, callback) {
   var message='<b>Moonshine le informa la actualización del catalogo ha sido ';
   var status=uploadedData.status;
-  console.log(uploadedData);
+  console.info(uploadedData);
   switch (status){
     case 'FAILED':
       message+='incorrecta.<br>Adjunto a este correo le adjuntamos el fichero para que lo revise.</b><br>'+uploadedData.errors;
@@ -32,33 +32,33 @@ function mail(file,uploadedData, callback) {
 }
 
 function mailSuccess(message,callback) {
-  console.log('Sending success email...');
+  console.info('Sending success email...');
   mailer.sendMail(message, function(err,result){
       callback(err,result);
   });
 }
 
 function mailError(message,file, callback) {
-  console.log('Sending error email...');
+  console.info('Sending error email...');
   mailer.sendMultipartMail(message,file,function(err,result){
     callback(err,result);
   });
 }
 
 function checkMailStatus(result,callback){
-  console.log("Checking mail result... ");
+  console.info("Checking mail result... ");
   if (result.rejected.length===0)
-    console.log("Everyone has been notified from data-import result.");
+    console.info("Everyone has been notified from data-import result.");
   else{
-    console.log("The following users couldn´t have recived the data-import result.")
+    console.info("The following users couldn´t have recived the data-import result.")
     for(var i=0;i<result.rejected.length;i++)
-      console.log(result.rejected[i]);
+      console.info(result.rejected[i]);
   }
   callback(null);
 }
 
 function deleteFile(file, callback) {
-  console.log('Deleting file %s ...',file);
+  console.info('Deleting file %s ...',file);
   var fileName=path.basename(file);
   fs.unlink(file, function(err){
     if (err)
@@ -100,22 +100,21 @@ function notificarError(message,file, callback){
 }
 
 watcher.monitor(config.folder, function(evt, file) {
-  console.log("Monitor started");
+  console.info("Monitor started");
   switch (evt) {//Comprueba el evento
     case 'add':
-      console.log('File %s added',file);
+      console.info('File %s added',file);
       checkValidFile(file,function(err,result){
         if (err) {
           console.error("Se ha producido un error: "+err);
           notificarError(err,file, function(errMail, result){
             if (errMail)
-              console.log("Error grave, no se ha podido notificar. "+err+". Proceso finalizado.");
+              console.info("Error grave, no se ha podido notificar. "+err+". Proceso finalizado.");
             else
-              console.log("Notificacion del error enviada correctamente. Proceso finalizado");
+              console.info("Notificacion del error enviada correctamente. Proceso finalizado");
           })
-        }else {
-          console.log(result);
-        }
+        }else
+          console.info(result);
       });
       break;
     case 'remove':
