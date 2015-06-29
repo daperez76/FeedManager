@@ -1,0 +1,21 @@
+{
+  "name": "ecidataimport",
+  "version": "1.0.0",
+  "author": {
+    "name": "Daniel Perez Bermudez."
+  },
+  "description": "Proceso encargado de lanzar los difrentes dataImport contra analytics",
+  "main": "./dataimport",
+  "dependencies": {
+    "async": "^1.2.1",
+    "chokidar": "^1.0.3",
+    "googleapis": "^2.0.5",
+    "nodemailer": "^1.3.4"
+  },
+  "maintainers": [
+    {
+      "name": "Damiel Perez",
+      "email": "daniel.perez.bermudez@atsistemas.com"
+    }
+  ]
+}
